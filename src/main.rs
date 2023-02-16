@@ -1,21 +1,45 @@
-use nannou::prelude::*;
+use iced::Theme;
+use iced::alignment;
+use iced::executor;
+use iced::theme;
+use iced::widget::{
+    checkbox, column, container, horizontal_space, image, radio, row, scrollable, slider, text,
+    text_input, toggler, vertical_space,
+};
+use iced::widget::{Button, Column, Container, Slider};
+use iced::Application;
+use iced::Command;
+use iced::{Color, Element, Length, Renderer, Sandbox, Settings};
 
-fn main() {
-    nannou::app(model)
-        .update(update)
-        .simple_window(view)
-        .run();
+pub fn main() -> iced::Result {
+    Game::run(Settings::default())
 }
 
-struct Model {}
+// pub struct Game {
+//     select: i32,
+//     debug: bool,
+// }
+struct Game;
 
-fn model(_app: &App) -> Model {
-    Model {}
-}
+impl Application for Game {
+    type Executor = executor::Default;
+    type Flags = ();
+    type Message = ();
+    type Theme = Theme;
+    fn new(flags: Self::Flags) -> (Game, iced::Command<Self::Message>) {
+        (Game, Command::none())
+    }
 
-fn update(_app: &App, _model: &mut Model, _update: Update) {
-}
+    fn title(&self) -> String {
+        String::from("My Conway's Game of Life")
+    }
 
-fn view(_app: &App, _model: &Model, frame: Frame){
-    frame.clear(PURPLE);
+
+    fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
+        Command::none()
+    }
+
+    fn view(&self) -> Element<'_, Self::Message, iced::Renderer<Self::Theme>> {
+        "Hello, world".into()
+    }
 }
