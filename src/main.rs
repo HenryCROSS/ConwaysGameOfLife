@@ -1,3 +1,7 @@
+mod board;
+mod game;
+mod game_process;
+
 use iced::Theme;
 use iced::alignment;
 use iced::executor;
@@ -40,6 +44,6 @@ impl Application for Game {
     }
 
     fn view(&self) -> Element<'_, Self::Message, iced::Renderer<Self::Theme>> {
-        "Hello, world".into()
+        "Hello, world, FUCK".into()
     }
 }
