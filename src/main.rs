@@ -2,36 +2,49 @@ mod board;
 mod game;
 mod game_process;
 
-use iced::Theme;
-use iced::alignment;
-use iced::executor;
-use iced::theme;
-use iced::widget::{
-    checkbox, column, container, horizontal_space, image, radio, row, scrollable, slider, text,
-    text_input, toggler, vertical_space,
-};
-use iced::widget::{Button, Column, Container, Slider};
-use iced::Application;
-use iced::Command;
-use iced::{Color, Element, Length, Renderer, Sandbox, Settings};
+use std::fmt::format;
 
-pub fn main() -> iced::Result {
-    Game::run(Settings::default())
+use iced::widget::Button;
+use iced::widget::Column;
+use iced::widget::Container;
+use iced::widget::Text;
+use iced::{Element, Sandbox, Settings};
+
+pub fn main() -> Result<(), iced::Error> {
+    Game_UI::run(Settings::default())
 }
 
-// pub struct Game {
-//     select: i32,
-//     debug: bool,
-// }
-struct Game;
+enum Game_Stage {
+    SETTINGS,
+    GAMMING,
+    MENU,
+    EXIT,
+}
+struct Game_UI {
+    stage: Game_Stage,
+    debug: bool,
+    value: i32,
+}
 
-impl Application for Game {
-    type Executor = executor::Default;
-    type Flags = ();
-    type Message = ();
-    type Theme = Theme;
-    fn new(flags: Self::Flags) -> (Game, iced::Command<Self::Message>) {
-        (Game, Command::none())
+#[derive(Debug, Clone, Copy)]
+pub enum MenuMessage {
+    Exit,
+    Play,
+    Setting,
+    Menu
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum CounterMessage {
+    IncrementPressed,
+    DecrementPressed
+}
+
+impl Sandbox for Game_UI {
+    type Message = MenuMessage;
+
+    fn new() -> Self {
+        Game_UI { stage: Game_Stage::MENU, value: 0, debug: false }
     }
 
     fn title(&self) -> String {
@@ -39,11 +52,21 @@ impl Application for Game {
     }
 
 
-    fn update(&mut self, message: Self::Message) -> Command<Self::Message> {
-        Command::none()
+    fn update(&mut self, message: Self::Message) {
+        match message {
+            MenuMessage::Exit => self.stage = Game_Stage::EXIT,
+            MenuMessage::Play => self.stage = Game_Stage::GAMMING,
+            MenuMessage::Setting => self.stage = Game_Stage::SETTINGS,
+            MenuMessage::Menu => self.stage = Game_Stage::MENU,
+        }
     }
 
-    fn view(&self) -> Element<'_, Self::Message, iced::Renderer<Self::Theme>> {
-        "Hello, world, FUCK".into()
+    fn view(&self)  -> iced::Element<'_, Self::Message> {
+        let label = Text::new(format!("Count: {}", self.value));
+        let incr = Button::new("Play").on_press(MenuMessage::Play);
+        let decr = Button::new("Settings").on_press(MenuMessage::Setting);
+
+        let col = Column::new().push(incr).push(label).push(decr);
+        Container::new(col).center_x().center_y().width(iced::Length::Fill).height(iced::Length::Fill).into()
     }
 }
