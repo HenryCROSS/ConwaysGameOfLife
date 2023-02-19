@@ -1,6 +1,7 @@
 mod board;
 mod game;
 mod game_process;
+mod gui;
 
 use std::fmt::format;
 
@@ -31,26 +32,29 @@ pub enum MenuMessage {
     Exit,
     Play,
     Setting,
-    Menu
+    Menu,
 }
 
 #[derive(Debug, Clone, Copy)]
 pub enum CounterMessage {
     IncrementPressed,
-    DecrementPressed
+    DecrementPressed,
 }
 
 impl Sandbox for Game_UI {
     type Message = MenuMessage;
 
     fn new() -> Self {
-        Game_UI { stage: Game_Stage::MENU, value: 0, debug: false }
+        Game_UI {
+            stage: Game_Stage::MENU,
+            value: 0,
+            debug: false,
+        }
     }
 
     fn title(&self) -> String {
         String::from("My Conway's Game of Life")
     }
-
 
     fn update(&mut self, message: Self::Message) {
         match message {
@@ -61,12 +65,17 @@ impl Sandbox for Game_UI {
         }
     }
 
-    fn view(&self)  -> iced::Element<'_, Self::Message> {
+    fn view(&self) -> iced::Element<'_, Self::Message> {
         let label = Text::new(format!("Count: {}", self.value));
         let incr = Button::new("Play").on_press(MenuMessage::Play);
         let decr = Button::new("Settings").on_press(MenuMessage::Setting);
 
         let col = Column::new().push(incr).push(label).push(decr);
-        Container::new(col).center_x().center_y().width(iced::Length::Fill).height(iced::Length::Fill).into()
+        Container::new(col)
+            .center_x()
+            .center_y()
+            .width(iced::Length::Fill)
+            .height(iced::Length::Fill)
+            .into()
     }
 }
